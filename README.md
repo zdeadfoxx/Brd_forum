@@ -17,7 +17,7 @@
 **Технологический стек:**
 
 - Клиентская часть (Frontend): React.
-- Серверная часть (Backend): PHP (REST API).
+- Серверная часть (Backend): Node js (REST API).
 - СУБД: PostgreSQL.
 - Инфраструктура: Docker, Linux-сервер, reverse proxy (Nginx).
 
