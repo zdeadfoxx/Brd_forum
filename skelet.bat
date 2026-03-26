@@ -1,6 +1,6 @@
 @echo off
 
-npx create-react-app .
+npx create-react-app brd_forum
 
 cd Frontend
 
