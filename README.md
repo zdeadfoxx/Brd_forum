@@ -20,9 +20,6 @@
 - Клиентская часть (Frontend): React, Tailwind CSS.
 - Серверная часть (Backend): Nodejs (REST API).
 
-- Клиентская часть (Frontend): React.
-- Серверная часть (Backend): Node js (REST API).
-
 - СУБД: PostgreSQL.
 - Инфраструктура: Docker, Linux-сервер, reverse proxy (Nginx).
 
