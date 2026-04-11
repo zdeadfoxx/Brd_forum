@@ -10,6 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dockerode": "^4.0.10"
-  }
+    "cors": "^2.8.6",
+    "dockerode": "^4.0.10",
+    "express": "^5.2.1"
+  },
+"scripts": {
+  "start": "node src/server.js"
+}
 }
