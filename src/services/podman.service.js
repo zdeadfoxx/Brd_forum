@@ -1,10 +1,13 @@
 const Docker = require('dockerode');
 
-const docker = new Docker({ socketPath: '/var/run/podman/podman.sock' });
+const socketPath = process.env.PODMAN_SOCKET || '/var/run/podman/podman.sock';
+const docker = new Docker({ socketPath });
+
+const baseDomain = process.env.BASE_DOMAIN || 'taas.test';
 
 async function deployClientEnv(clientId) {
     const containerName = `client-${clientId}`;
-    const domain = `client${clientId}.taas.local`;
+    const domain = `client${clientId}.${baseDomain}`;
 
     try {
         const container = await docker.createContainer({
