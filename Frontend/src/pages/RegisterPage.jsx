@@ -1,3 +1,5 @@
+// src/pages/RegisterPage.jsx
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +9,7 @@ export default function RegisterPage() {
   const [formData, setFormData] = useState({
     profileName: "",
     login: "",
+    email: "",
     password: "",
     confirmPassword: "",
   });
@@ -26,6 +29,10 @@ export default function RegisterPage() {
 
     if (!formData.profileName.trim()) newErrors.profileName = "Имя профиля обязательно";
     if (!formData.login.trim()) newErrors.login = "Логин обязателен";
+    if (!formData.email.trim()) newErrors.email = "Email обязателен";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+      newErrors.email = "Введите корректный email";
+
     if (!formData.password) newErrors.password = "Пароль обязателен";
     if (formData.password.length < 6)
       newErrors.password = "Пароль должен быть не менее 6 символов";
@@ -40,7 +47,7 @@ export default function RegisterPage() {
     e.preventDefault();
     if (validate()) {
       console.log("Данные регистрации:", formData);
-      // После успешной логики регистрации — переход на LoginPage
+      // Переход на страницу входа
       navigate("/login");
     }
   };
@@ -50,6 +57,7 @@ export default function RegisterPage() {
       <h2>Регистрация</h2>
 
       <form onSubmit={handleSubmit}>
+        {/* Имя профиля */}
         <div className="form-group">
           <label>Имя профиля</label>
           <input
@@ -64,6 +72,7 @@ export default function RegisterPage() {
           )}
         </div>
 
+        {/* Логин */}
         <div className="form-group">
           <label>Логин</label>
           <input
@@ -76,6 +85,20 @@ export default function RegisterPage() {
           {errors.login && <span className="error">{errors.login}</span>}
         </div>
 
+        {/* Почта */}
+        <div className="form-group">
+          <label>Электронная почта</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="example@email.com"
+          />
+          {errors.email && <span className="error">{errors.email}</span>}
+        </div>
+
+        {/* Пароль */}
         <div className="form-group">
           <label>Пароль</label>
           <input
@@ -90,6 +113,7 @@ export default function RegisterPage() {
           )}
         </div>
 
+        {/* Подтверждение пароля */}
         <div className="form-group">
           <label>Подтвердите пароль</label>
           <input
@@ -104,6 +128,7 @@ export default function RegisterPage() {
           )}
         </div>
 
+        {/* Кнопка */}
         <button type="submit">Зарегистрироваться</button>
       </form>
     </div>
