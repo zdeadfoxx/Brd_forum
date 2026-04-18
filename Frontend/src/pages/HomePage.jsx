@@ -10,13 +10,13 @@ export default function HomePage() {
       <p>Выберите раздел:</p>
 
       <div className="home-buttons">
-        <button type="button" onClick={() => navigate("/chat/:roomID")}>
+        <button type="button" onClick={() => navigate("/chat/:roomId")}>
           Чат
         </button>
         <button type="button" onClick={() => navigate("/forum")}>
           Форум
         </button>
-        <button type="button" onClick={() => navigate("/profile/:ID")}>
+        <button type="button" onClick={() => navigate("/profile/:id")}>
           Профиль
         </button>
       </div>
