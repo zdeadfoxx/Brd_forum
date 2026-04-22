@@ -1,45 +1,90 @@
 #!/bin/bash
-set -e # Прерывать выполнение при ошибках
+set -e
 
-echo "🔍 Проверяем статус контейнеров..."
+echo "🚀 TaaS Platform — Container Manager"
+echo "====================================="
 
-# Получаем статус контейнеров
-DB_STATUS=$(sudo podman ps -a --filter name=taas-db --format "{{.Status}}")
-TRAEFIK_STATUS=$(sudo podman ps -a --filter name=traefik --format "{{.Status}}")
+# Конфигурация
+DB_NAME="taas-db"
+DB_IMAGE="postgres:15-alpine"
+DB_USER="taas_admin"
+DB_PASS="${DB_PASSWORD:-taas_secure_pass_2024}"  # Лучше вынести в .env
+DB_NAME_REAL="taas_platform"
+NETWORK="demo-net"
+POSTGRES_PORT=5432
 
-echo "Статус taas-db: $DB_STATUS"
-echo "Статус traefik: $TRAEFIK_STATUS"
-
-# Запускаем контейнеры, если они не в статусе Up
-if [[ "$DB_STATUS" != *"Up"* ]]; then
-    echo "🚀 Запускаем контейнер taas-db..."
-    sudo podman start taas-db
-else
-    echo "✅ Контейнер taas-db уже запущен."
+# ── 1. Проверка сети ─────────────────────────────────────
+if ! podman network ls --format '{{.Name}}' | grep -q "^${NETWORK}$"; then
+    echo "⚠️ Сеть $NETWORK не найдена. Создаём..."
+    podman network create "$NETWORK"
 fi
 
-if [[ "$TRAEFIK_STATUS" != *"Up"* ]]; then
-    echo "🚀 Запускаем контейнер traefik..."
-    sudo podman start traefik
+# ── 2. PostgreSQL контейнер ──────────────────────────────
+echo "🐘 Проверка контейнера $DB_NAME..."
+
+if ! podman ps -a --format '{{.Names}}' | grep -q "^${DB_NAME}$"; then
+    echo "🔨 Создаём контейнер $DB_NAME..."
+    podman run -d \
+      --name "$DB_NAME" \
+      --network "$NETWORK" \
+      --restart unless-stopped \
+      -e POSTGRES_USER="$DB_USER" \
+      -e POSTGRES_PASSWORD="$DB_PASS" \
+      -e POSTGRES_DB="$DB_NAME_REAL" \
+      -v "${DB_NAME}_data:/var/lib/postgresql/data" \
+      "$DB_IMAGE" \
+      -c max_connections=200
+    echo "✅ Контейнер $DB_NAME создан"
 else
-    echo "✅ Контейнер traefik уже запущен."
+    echo "✅ Контейнер $DB_NAME уже существует"
 fi
 
-echo "⏳ Ждём, пока PostgreSQL будет готова принимать подключения..."
-# Ждём готовности PostgreSQL с таймаутом (например, 30 секунд)
-timeout 30 bash -c 'until sudo podman exec taas-db pg_isready -U taas_admin -d taas_platform > /dev/null 2>&1; do sleep 2; done'
+# ── 3. Запуск контейнеров ────────────────────────────────
+echo "▶ Запускаем контейнеры..."
 
-# Проверяем результат timeout
-if sudo podman exec taas-db pg_isready -U taas_admin -d taas_platform > /dev/null 2>&1; then
-    echo "✅ PostgreSQL готова принимать подключения."
-else
-    echo "❌ Ошибка: PostgreSQL не стала готова в течение 30 секунд."
+for container in "$DB_NAME" "traefik"; do
+    STATUS=$(podman ps -a --filter name="^${container}$" --format '{{.Status}}' 2>/dev/null || echo "")
+    if [[ "$STATUS" == *"Up"* ]]; then
+        echo "✅ $container уже запущен"
+    else
+        echo "🚀 Запускаем $container..."
+        podman start "$container"
+    fi
+done
+
+# ── 4. Ожидание готовности PostgreSQL ────────────────────
+echo "⏳ Ожидание готовности PostgreSQL..."
+TIMEOUT=30
+ELAPSED=0
+while [ $ELAPSED -lt $TIMEOUT ]; do
+    if podman exec "$DB_NAME" pg_isready -U "$DB_USER" -d "$DB_NAME_REAL" &>/dev/null; then
+        echo "✅ PostgreSQL готова (за $ELAPSED сек)"
+        break
+    fi
+    sleep 2
+    ELAPSED=$((ELAPSED + 2))
+    echo -n "."
+done
+
+if ! podman exec "$DB_NAME" pg_isready -U "$DB_USER" -d "$DB_NAME_REAL" &>/dev/null; then
+    echo ""
+    echo "❌ Ошибка: PostgreSQL не готова за $TIMEOUT секунд"
+    echo "💡 Проверь логи: podman logs $DB_NAME"
     exit 1
 fi
 
-echo "🎉 Все контейнеры запущены и готовы!"
+# ── 5. Вывод информации ──────────────────────────────────
+echo ""
+echo "📊 Статус контейнеров:"
+podman ps --filter name="^($DB_NAME|traefik)$" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
-# Если нужно сразу запустить Node.js (опционально)
-# echo "🎬 Запускаем Node.js оркестратор..."
-# sudo npm start
-
+echo ""
+echo "🔗 Полезные ссылки:"
+echo "   • Traefik dashboard: http://localhost:8080"
+echo "   • PostgreSQL: localhost:$POSTGRES_PORT (user: $DB_USER)"
+echo ""
+echo "🛠️ Полезные команды:"
+echo "   • Логи БД:          podman logs $DB_NAME"
+echo "   • Логи Traefik:     podman logs traefik"
+echo "   • Остановить всё:   podman stop $DB_NAME traefik"
+echo "   • Удалить БД (⚠️):  podman rm -f $DB_NAME && podman volume rm ${DB_NAME}_data"
