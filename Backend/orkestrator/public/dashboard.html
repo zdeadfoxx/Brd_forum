@@ -338,7 +338,13 @@
                     </tbody></table>
                 </div>
             </section>
-
+		            <!-- SSH hint -->
+            <section class="deploy-section" style="margin-top: var(--space-4);">
+                <div class="kpi-label">Последняя SSH-команда</div>
+                <div id="sshHint" class="ssh-cmd" style="display:inline-block;margin-top:var(--space-2);">
+                    Кликни по SSH-порту в таблице, чтобы увидеть команду подключения.
+                </div>
+            </section>
         </main>
     </div>
 
@@ -346,9 +352,9 @@
     <div class="toast-wrap" id="toastWrap"></div>
 
     <script>
-        const API = 'http://localhost:3001/api/environments';
+        const API = '/api/environments';
 
-        function showToast(msg, type = 'success') {
+	function showToast(msg, type = 'success') {
             const wrap = document.getElementById('toastWrap');
             const t = document.createElement('div');
             t.className = `toast ${type}`;
@@ -361,14 +367,30 @@
             setTimeout(() => t.remove(), 2800);
         }
 
-        function copySsh(port) {
-            const cmd = `ssh dev@localhost -p ${port}`;
+         function copySsh(port) {
+            const host = window.location.hostname || 'localhost';
+            const cmd = `ssh dev@${host} -p ${port}`;
+
+            // Обновляем подсказку под таблицей
+            const hint = document.getElementById('sshHint');
+            if (hint) {
+                hint.textContent = cmd;
+            }
+
+            // Пытаемся скопировать, если браузер позволяет
+            if (!navigator.clipboard || !navigator.clipboard.writeText) {
+                showToast('Копирование недоступно, скопируй команду вручную снизу.', 'error');
+                return;
+            }
+
             navigator.clipboard.writeText(cmd)
                 .then(() => showToast(`Скопировано: ${cmd}`))
-                .catch(() => showToast('Ошибка копирования', 'error'));
+                .catch(() => {
+                    showToast('Копирование не удалось, скопируй команду вручную снизу.', 'error');
+                });
         }
 
-        function formatDate(iso) {
+	function formatDate(iso) {
             if (!iso) return '—';
             const d = new Date(iso);
             return d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
