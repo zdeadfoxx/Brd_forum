@@ -1,0 +1,28 @@
+at > /home/daniilbondarenko/Brd_forum/Backend/orkestrator/.vscode/launch.json << 'EOF'
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Orchestrator",
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ],
+            "program": "${workspaceFolder}/src/server.js",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "NODE_ENV": "development",
+                "PORT": "3001",
+                "DATABASE_URL": "postgres://postgres:devpassword@localhost:5432/taas_db",
+                "PODMAN_SOCKET": "/run/podman/podman.sock"
+            },
+            "console": "integratedTerminal",
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ]
+        }
+    ]
+}
