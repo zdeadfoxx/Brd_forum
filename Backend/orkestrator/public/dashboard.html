@@ -124,6 +124,8 @@
         .btn-primary:hover { background: var(--color-primary-hover); }
         .btn-primary:active { opacity: 0.85; }
         .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-ghost { background: transparent; color: var(--color-text-muted); border: 1px solid var(--color-border); }
+        .btn-ghost:hover { background: var(--color-surface-2, var(--color-bg)); color: var(--color-text); }
         .btn-danger { background: transparent; color: var(--color-error); border: 1px solid var(--color-error); font-size: var(--text-xs); padding: var(--space-1) var(--space-3); }
         .btn-danger:hover { background: var(--color-error-highlight); }
 
@@ -142,7 +144,6 @@
         }
         .toast.success { border-color: var(--color-success); color: var(--color-success); }
         .toast.error { border-color: var(--color-error); color: var(--color-error); }
-        .toast.warning { border-color: var(--color-warning); color: var(--color-warning); }
         @keyframes toastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Environments table */
@@ -174,6 +175,7 @@
             text-transform: uppercase; letter-spacing: 0.06em;
             text-align: left;
             border-bottom: 1px solid var(--color-divider);
+            font-variant-numeric: tabular-nums;
         }
         tbody tr {
             transition: background var(--transition);
@@ -185,6 +187,7 @@
             padding: var(--space-4) var(--space-6);
             font-size: var(--text-sm);
             font-variant-numeric: tabular-nums lining-nums;
+            vertical-align: middle;
         }
         td.mono { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: var(--text-xs); }
 
@@ -204,8 +207,18 @@
             text-align: center; color: var(--color-text-muted);
         }
         .empty svg { margin: 0 auto var(--space-4); color: var(--color-text-faint); }
-        
-        /* SSH cmd copy */
+        .empty p { font-size: var(--text-sm); max-width: 36ch; margin-inline: auto; }
+
+        /* Skeleton */
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        .skeleton {
+            background: linear-gradient(90deg, var(--color-surface-2, var(--color-bg)) 25%, var(--color-divider) 50%, var(--color-surface-2, var(--color-bg)) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+            border-radius: var(--radius-sm); height: 1em; display: inline-block;
+        }
+
+        /* SSH hint */
         .ssh-cmd {
             font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
             font-size: var(--text-xs); color: var(--color-text-faint);
@@ -223,96 +236,13 @@
         }
         .theme-toggle:hover { background: var(--color-divider); color: var(--color-text); }
 
-        /* Live dot */
+        /* Pulse dot */
         .live-dot {
             width: 8px; height: 8px; border-radius: 50%;
             background: var(--color-success);
             animation: pulse 2s ease-in-out infinite;
         }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-        /* MODAL STYLES */
-        .modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 1000;
-            opacity: 0; animation: fadeIn 0.2s forwards;
-        }
-        @keyframes fadeIn { to { opacity: 1; } }
-        
-        .modal-content {
-            background: var(--color-surface);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-lg);
-            width: 90%; max-width: 600px;
-            box-shadow: var(--shadow-md);
-            display: flex; flex-direction: column;
-            max-height: 90vh; overflow-y: auto;
-            transform: scale(0.95); animation: slideUp 0.3s forwards;
-        }
-        @keyframes slideUp { to { transform: scale(1); } }
-
-        .modal-header {
-            padding: var(--space-6);
-            border-bottom: 1px solid var(--color-divider);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .modal-header h3 { font-size: var(--text-lg); font-weight: 700; color: var(--color-success); }
-        .close-btn { font-size: 1.5rem; line-height: 1; color: var(--color-text-muted); }
-        .close-btn:hover { color: var(--color-text); }
-
-        .modal-body { padding: var(--space-6); }
-        
-        .info-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: var(--space-4);
-            background: var(--color-surface-2);
-            padding: var(--space-4);
-            border-radius: var(--radius-md);
-            margin-bottom: var(--space-6);
-            border: 1px solid var(--color-border);
-        }
-        .info-item strong { display: block; font-size: var(--text-xs); color: var(--color-text-muted); text-transform: uppercase; margin-bottom: 2px; }
-        .info-item a { color: var(--color-primary); text-decoration: none; }
-        .info-item a:hover { text-decoration: underline; }
-
-        .step { margin-bottom: var(--space-5); }
-        .step strong { display: block; font-size: var(--text-sm); color: var(--color-text); margin-bottom: var(--space-2); }
-        .step p { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-2); line-height: 1.5; }
-        
-        .cmd-box {
-            display: block;
-            background: var(--color-bg);
-            border: 1px solid var(--color-border);
-            border-left: 3px solid var(--color-primary);
-            padding: var(--space-3);
-            border-radius: var(--radius-sm);
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: var(--text-xs);
-            color: var(--color-text);
-            cursor: pointer;
-            transition: all 0.2s;
-            word-break: break-all;
-        }
-        .cmd-box:hover {
-            background: var(--color-primary-highlight);
-            border-left-color: var(--color-primary-hover);
-        }
-        .cmd-box::after {
-            content: '📋 Скопировать';
-            float: right;
-            font-size: 0.75rem;
-            opacity: 0.6;
-        }
-
-        .modal-footer {
-            padding: var(--space-4) var(--space-6);
-            border-top: 1px solid var(--color-divider);
-            background: var(--color-surface-2);
-            text-align: right;
-        }
 
         /* Mobile */
         @media (max-width: 640px) {
@@ -321,10 +251,129 @@
             .deploy-form { flex-direction: column; }
             .field { min-width: 0; }
             thead { display: none; }
-            tbody tr { display: grid; gap: var(--space-1); padding: var(--space-4); }
+            tbody tr { display: grid; gap: var(--space-1); padding: var(--space-4) var(--space-4); }
             td { padding: 0; font-size: var(--text-xs); }
-            td::before { content: attr(data-label) ': '; color: var(--color-text-muted); font-weight: 600; text-transform: uppercase; }
+            td::before {
+                content: attr(data-label) ': ';
+                color: var(--color-text-muted); font-size: var(--text-xs);
+                text-transform: uppercase; letter-spacing: 0.05em;
+                font-weight: 600;
+            }
         }
+
+        /* --- MODAL STYLES --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+            animation: fadeIn 0.2s ease-out;
+        }
+        .modal-overlay.active { display: flex; }
+        
+        .modal-content {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--color-divider);
+        }
+        .modal-header h3 { font-size: var(--text-lg); font-weight: 700; color: var(--color-text); }
+        .close-btn {
+            background: transparent; border: none; font-size: 24px; color: var(--color-text-muted);
+            cursor: pointer; line-height: 1; padding: 0;
+        }
+        .close-btn:hover { color: var(--color-text); }
+
+        .modal-body { padding: var(--space-6); overflow-y: auto; }
+        
+        .info-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--space-4);
+            background: var(--color-surface-2);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-6);
+            border: 1px solid var(--color-border);
+        }
+        .info-grid div { font-size: var(--text-sm); }
+        .info-grid strong { display: block; font-size: var(--text-xs); color: var(--color-text-muted); margin-bottom: 2px; }
+
+        .step { margin-bottom: var(--space-6); }
+        .step:last-child { margin-bottom: 0; }
+        .step-title {
+            font-size: var(--text-sm); font-weight: 700; color: var(--color-text);
+            margin-bottom: var(--space-2); display: flex; align-items: center; gap: 6px;
+        }
+        .step-content {
+            font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.5;
+        }
+        .step-content code {
+            background: var(--color-bg); padding: 2px 4px; border-radius: 4px;
+            font-family: monospace; font-size: 0.9em; color: var(--color-primary);
+        }
+        .cmd-box {
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            padding: var(--space-3);
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: var(--text-xs);
+            color: var(--color-text);
+            margin-top: var(--space-2);
+            cursor: pointer;
+            word-break: break-all;
+            transition: all 0.2s;
+        }
+        .cmd-box:hover {
+            border-color: var(--color-primary);
+            background: var(--color-primary-highlight);
+        }
+
+        .modal-footer {
+            padding: var(--space-4) var(--space-6);
+            border-top: 1px solid var(--color-divider);
+            display: flex; justify-content: flex-end;
+            background: var(--color-surface-2);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Tunnel Help Modal Specifics */
+        .os-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--space-4); margin-top: var(--space-4);
+        }
+        .os-card {
+            background: var(--color-surface-2);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            transition: transform 0.2s;
+        }
+        .os-card:hover { transform: translateY(-2px); border-color: var(--color-primary); }
+        .os-icon { font-size: 24px; margin-bottom: var(--space-2); display: block; }
+        .os-title { font-weight: 700; font-size: var(--text-sm); margin-bottom: var(--space-2); display: block; }
+        .os-steps { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.4; }
+        .os-steps ol { padding-left: 1.2em; margin: 0; }
     </style>
 </head>
 <body>
@@ -345,12 +394,15 @@
             </div>
             <div class="topbar-right">
                 <div class="live-dot" title="Live polling активен"></div>
-                <button class="theme-toggle" data-theme-toggle aria-label="Переключить тему"></button>
+                <button class="theme-toggle" data-theme-toggle aria-label="Переключить тему">
+                    <!-- иконка вставляется JS-->
+                </button>
             </div>
         </header>
 
         <!-- Main -->
         <main class="main">
+
             <!-- KPIs -->
             <div class="kpi-grid">
                 <div class="kpi">
@@ -377,7 +429,7 @@
                     </div>
                     <div class="field" style="flex-basis: 100%;">
                         <label for="sshKeyInput">SSH Public Key (optional)</label>
-                        <input id="sshKeyInput" type="text" placeholder="ssh-ed25519 AAAA... (скопируй из ~/.ssh/id_ed25519.pub)">
+                        <input id="sshKeyInput" type="text" placeholder="ssh-ed25519 AAAA... или скопируй содержимое ~/.ssh/id_ed25519.pub">
                         <small>Если не указать, вход будет по паролю: <code>dev</code></small>
                     </div>
                     <button class="btn btn-primary" id="deployBtn" onclick="deployEnv()">
@@ -399,18 +451,27 @@
                     </button>
                 </div>
                 <div id="tableContainer">
+                    <!-- Skeleton при первой загрузке -->
                     <table><tbody id="skeletonBody">
-                        <tr><td colspan="5" style="padding:var(--space-4) var(--space-6)">
+                        <tr><td colspan="7" style="padding:var(--space-4) var(--space-6)">
                             <span class="skeleton" style="width:60%;display:block;margin-bottom:8px"></span>
                             <span class="skeleton" style="width:40%"></span>
                         </td></tr>
                     </tbody></table>
                 </div>
             </section>
+
         </main>
     </div>
 
+    <!-- Toast container -->
     <div class="toast-wrap" id="toastWrap"></div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal-overlay"></div>
+
+    <!-- Tunnel Help Modal -->
+    <div id="tunnelHelpModal" class="modal-overlay"></div>
 
     <script>
         const API = '/api/environments';
@@ -429,15 +490,83 @@
         }
 
         function copyText(text) {
-            if (!navigator.clipboard) {
-                alert('Скопируйте вручную:\n' + text);
+            if (!navigator.clipboard || !navigator.clipboard.writeText) {
+                alert(`Скопируй вручную:\n\n${text}`);
                 return;
             }
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('Скопировано в буфер!', 'success');
-            }).catch(() => {
-                alert('Скопируйте вручную:\n' + text);
-            });
+            navigator.clipboard.writeText(text)
+                .then(() => showToast('Скопировано в буфер'))
+                .catch(() => alert(`Скопируй вручную:\n\n${text}`));
+        }
+
+        function showTunnelHelp() {
+            const modal = document.getElementById('tunnelHelpModal');
+            modal.innerHTML = `
+                <div class="modal-overlay active" style="position:relative; background:transparent; backdrop-filter:none;" onclick="closeTunnelHelp()">
+                    <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 500px;">
+                        <div class="modal-header">
+                            <h3>🔌 Настройка туннеля</h3>
+                            <button class="close-btn" onclick="closeTunnelHelp()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p style="margin-bottom: 1rem;">Для работы команды <code>ssh -R ...</code> на твоем компьютере должен быть запущен SSH-сервер.</p>
+                            
+                            <div class="os-grid">
+                                <!-- macOS -->
+                                <div class="os-card">
+                                    <span class="os-icon">🍎</span>
+                                    <span class="os-title">macOS</span>
+                                    <div class="os-steps">
+                                        <ol>
+                                            <li>Системные настройки</li>
+                                            <li>Основные → Общие</li>
+                                            <li>Включи <strong>Удаленный вход</strong></li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <!-- Linux -->
+                                <div class="os-card">
+                                    <span class="os-icon">🐧</span>
+                                    <span class="os-title">Linux</span>
+                                    <div class="os-steps">
+                                        Обычно включен.<br>
+                                        Проверь:<br>
+                                        <code>sudo systemctl status ssh</code>
+                                    </div>
+                                </div>
+                                <!-- Windows -->
+                                <div class="os-card">
+                                    <span class="os-icon">🪟</span>
+                                    <span class="os-title">Windows</span>
+                                    <div class="os-steps">
+                                        <ol>
+                                            <li>Параметры → Приложения</li>
+                                            <li>Доп. компоненты</li>
+                                            <li>Установи <strong>OpenSSH Server</strong></li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" onclick="closeTunnelHelp()">Понятно</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        function closeTunnelHelp() {
+            const modal = document.getElementById('tunnelHelpModal');
+            modal.classList.remove('active');
+            setTimeout(() => modal.innerHTML = '', 300);
+        }
+
+        function formatDate(iso) {
+            if (!iso) return '—';
+            const d = new Date(iso);
+            return d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
         }
 
         function updateKPIs(envs) {
@@ -450,62 +579,111 @@
 
         function renderTable(envs) {
             const container = document.getElementById('tableContainer');
+
             if (envs.length === 0) {
-                container.innerHTML = `<div class="empty"><p>Нет активных сред.</p></div>`;
+                container.innerHTML = `
+                    <div class="empty">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8M12 17v4"/>
+                        </svg>
+                        <p>Нет активных сред.<br>Разверни первую среду выше.</p>
+                    </div>`;
                 return;
             }
 
             const rows = envs.map(env => {
-                const host = window.location.hostname || 'localhost';
-                const sshCmd = `ssh dev@${host} -p ${env.ssh_port}`;
+                let statusBadge = `<span class="badge ${env.status}">${env.status}</span>`;
                 
+                const host = window.location.hostname || 'localhost';
+                const tunnelCmd = `ssh -R 3000:localhost:3000 dev@${host} -p ${env.ssh_port}`;
+
                 return `
-                    <tr>
-                        <td data-label="ID" class="mono">${escHtml(env.client_id)}</td>
-                        <td data-label="Статус"><span class="badge ${env.status}">${env.status}</span></td>
-                       <td data-label="URL">
-                        ${env.url ? `
-                            <a href="${escHtml(env.url)}" target="_blank" rel="noopener" style="text-decoration: none;">
-                                <button class="btn btn-primary" 
-                                    style="
-                                        padding: 6px 12px; 
-                ≠                        font-size: 12px; 
-                                        font-weight: 500;
-                                        display: inline-flex; 
-                                        align-items: center; 
-                                        gap: 6px;
-                                        background: var(--color-surface-2);
-                                        border: 1px solid var(--color-border);
-                                        color: var(--color-text);
-                                        transition: all 0.2s ease;
-                                        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-                                    "
-                                    onmouseover="this.style.borderColor='var(--color-primary)'; this.style.color='var(--color-primary)'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)';"
-                                    onmouseout="this.style.borderColor='var(--color-border)'; this.style.color='var(--color-text)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)';"
-                                >
-                                    <!-- Иконка внешней ссылки -->
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                        <polyline points="15 3 21 3 21 9"></polyline>
-                                        <line x1="10" y1="14" x2="21" y2="3"></line>
-                                    </svg>
-                                    <span>Открыть сайт</span>
+                    <tr data-client-id="${escHtml(env.client_id)}">
+                        <td data-label="Client ID" class="mono">${escHtml(env.client_id)}</td>
+                        <td data-label="Статус">${statusBadge}</td>
+                        <td data-label="URL">
+                            ${env.url ? `
+                                <a href="${escHtml(env.url)}" target="_blank" rel="noopener" style="text-decoration: none;">
+                                    <button class="btn btn-ghost" 
+                                        style="
+                                            padding: 6px 12px; 
+                                            font-size: 12px; 
+                                            font-weight: 500;
+                                            display: inline-flex; 
+                                            align-items: center; 
+                                            gap: 6px;
+                                            background: var(--color-surface-2);
+                                            border: 1px solid var(--color-border);
+                                            color: var(--color-text);
+                                            transition: all 0.2s ease;
+                                            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+                                        "
+                                        onmouseover="this.style.borderColor='var(--color-primary)'; this.style.color='var(--color-primary)'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)';"
+                                        onmouseout="this.style.borderColor='var(--color-border)'; this.style.color='var(--color-text)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 2px rgba(0,0,0,0.05)';"
+                                    >
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                            <polyline points="15 3 21 3 21 9"></polyline>
+                                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                                        </svg>
+                                        <span>Открыть сайт</span>
+                                    </button>
+                                </a>
+                            ` : '<span style="color: var(--color-text-faint); font-style: italic;">—</span>'}
+                        </td>
+                        <td data-label="SSH">
+                            ${env.ssh_port ? `<span class="ssh-cmd" onclick="copyText('ssh dev@${host} -p ${env.ssh_port}')">:${env.ssh_port}</span>` : '—'}
+                        </td>
+                        <td data-label="Туннель">
+                             ${env.ssh_port ? `
+                                <button class="btn btn-ghost" 
+                                    onclick="showTunnelFor('${escHtml(env.client_id)}', ${env.ssh_port})" 
+                                    style="font-size: 11px; padding: 4px 8px; color: var(--color-primary); border: 1px solid var(--color-primary);">
+                                    🔌 Проброс
                                 </button>
-                            </a>
-                        ` : `<span style="color: var(--color-text-faint); font-style: italic;">—</span>`}
-                    </td>
-                        <td data-label="SSH"><span class="ssh-cmd" onclick="copyText('${sshCmd}')">:${env.ssh_port}</span></td>
+                            ` : '—'}
+                        </td>
+                        <td data-label="Создана" style="color:var(--color-text-muted)">
+                            ${formatDate(env.created_at)}
+                        </td>
                         <td data-label="Действие">
-                            <button class="btn btn-danger" onclick="removeEnv('${escHtml(env.client_id)}')">Удалить</button>
+                            <button class="btn btn-danger" onclick="removeEnv('${escHtml(env.client_id)}')">
+                                Удалить
+                            </button>
                         </td>
                     </tr>
                 `;
             }).join('');
 
-            container.innerHTML = `<table><thead><tr><th>ID</th><th>Статус</th><th>URL</th><th>SSH</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Client ID</th><th>Статус</th><th>URL</th>
+                            <th>SSH</th><th>Туннель</th><th>Создана</th><th></th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>`;
         }
 
-        function escHtml(str) { return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+        // Хелпер для кнопки туннеля в таблице
+        function showTunnelFor(clientId, port) {
+            const host = window.location.hostname || 'localhost';
+            const cmd = `ssh -R 3000:localhost:3000 dev@${host} -p ${port}`;
+            
+            // Копируем команду
+            copyText(cmd);
+            
+            // Сразу показываем инструкцию
+            setTimeout(() => showTunnelHelp(), 300);
+        }
+
+        function escHtml(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                             .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
 
         async function fetchEnvironments() {
             const icon = document.getElementById('refreshIcon');
@@ -517,18 +695,26 @@
                 updateKPIs(envs);
                 renderTable(envs);
             } catch(err) {
-                showToast(`Ошибка: ${err.message}`, 'error');
+                showToast(`Ошибка подключения: ${err.message}`, 'error');
+                console.error('[fetchEnvironments]', err);
             } finally {
                 icon.classList.remove('spinning');
             }
         }
 
         async function deployEnv() {
-            const clientId = document.getElementById('clientIdInput').value.trim();
-            const sshPublicKey = document.getElementById('sshKeyInput').value.trim();
+            const input = document.getElementById('clientIdInput');
+            const keyInput = document.getElementById('sshKeyInput');
             const btn = document.getElementById('deployBtn');
+            
+            const clientId = input.value.trim();
+            const sshPublicKey = keyInput.value.trim();
 
-            if (!clientId) { showToast('Введи Client ID', 'error'); return; }
+            if (!clientId) {
+                input.focus();
+                showToast('Введи Client ID', 'error');
+                return;
+            }
 
             btn.disabled = true;
             btn.textContent = '⏳ Деплой...';
@@ -547,12 +733,12 @@
                 if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
 
                 if (data.existed) {
-                    showToast(`Контейнер ${clientId} уже существует!`, 'warning');
+                    showToast(`Контейнер ${clientId} уже существует`, 'error');
                 } else {
-                    showToast(`Среда ${clientId} запущена!`, 'success');
-                    showSuccessModal({ ...data, sshPublicKey }); // Передаем данные в модалку
-                    document.getElementById('clientIdInput').value = '';
-                    document.getElementById('sshKeyInput').value = '';
+                    showToast(`✓ Среда ${clientId} запущена!`);
+                    input.value = '';
+                    keyInput.value = '';
+                    showSuccessModal(data); // Показываем модальное окно
                     await fetchEnvironments();
                 }
             } catch(err) {
@@ -564,89 +750,129 @@
         }
 
         function showSuccessModal(env) {
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay';
-            modal.onclick = () => modal.remove();
-
+            const modal = document.getElementById('successModal');
             const host = window.location.hostname || 'localhost';
+
             const sshCmd = `ssh dev@${host} -p ${env.sshPort}`;
-            
-            // Логика отображения инструкции в зависимости от наличия ключа
-            const authStep = env.sshPublicKey 
-                ? `
-                    <div class="step">
-                        <strong>3. Вход без пароля 🔑</strong>
-                        <p>Твой ключ уже загружен в контейнер. Просто подключись:</p>
-                        <div class="cmd-box" onclick="copyText('${sshCmd.replace(/'/g, "\\'")}')">${sshCmd}</div>
-                    </div>`
-                : `
-                    <div class="step">
-                        <strong>3. Вход по паролю 🔒</strong>
-                        <p>Используй стандартный пароль: <code style="background:var(--color-bg); padding:2px 4px; border-radius:4px;">dev</code></p>
-                        <div class="cmd-box" onclick="copyText('${sshCmd.replace(/'/g, "\\'")}')">${sshCmd}</div>
-                    </div>`;
+            const tunnelCmd = `ssh -R 3000:localhost:3000 dev@${host} -p ${env.sshPort}`;
+
+            const authInstruction = env.sshPublicKey
+                ? `<div class="step-content">Твой ключ уже загружен. Просто подключись:<br><span class="cmd-box" onclick="copyText('${sshCmd}')">${sshCmd}</span></div>`
+                : `<div class="step-content">Используй пароль: <code>dev</code><br><span class="cmd-box" onclick="copyText('${sshCmd}')">${sshCmd}</span></div>`;
 
             modal.innerHTML = `
-                <div class="modal-content" onclick="event.stopPropagation()">
-                    <div class="modal-header">
-                        <h3>🎉 Среда готова!</h3>
-                        <button class="close-btn" onclick="this.closest('.modal-overlay').remove()">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="info-grid">
-                            <div class="info-item"><strong>ID</strong>${env.clientId}</div>
-                            <div class="info-item"><strong>URL</strong><a href="${env.url}" target="_blank">Открыть сайт</a></div>
-                            <div class="info-item"><strong>SSH Порт</strong>${env.sshPort}</div>
+                <div class="modal-overlay active" style="position:relative; background:transparent; backdrop-filter:none;" onclick="closeModal()">
+                    <div class="modal-content" onclick="event.stopPropagation()">
+                        <div class="modal-header">
+                            <h3>🎉 Среда готова!</h3>
+                            <button class="close-btn" onclick="closeModal()">&times;</button>
                         </div>
 
-                        <h4 style="margin-bottom:1rem; font-size:var(--text-sm); text-transform:uppercase; color:var(--color-text-muted);">Инструкция:</h4>
-                        
-                        <div class="step">
-                            <strong>1. Подключись по SSH</strong>
-                            <p>Выполни команду в терминале своего компьютера:</p>
-                            <div class="cmd-box" onclick="copyText('${sshCmd.replace(/'/g, "\\'")}')">${sshCmd}</div>
+                        <div class="modal-body">
+                            <div class="info-grid">
+                                <div><strong>ID:</strong> ${env.clientId}</div>
+                                <div><strong>URL:</strong> <a href="${env.url}" target="_blank" style="color:var(--color-primary)">Открыть сайт</a></div>
+                                <div><strong>SSH Порт:</strong> ${env.sshPort}</div>
+                            </div>
+
+                            <hr style="border: 0; border-top: 1px solid var(--color-divider); margin: 20px 0;">
+
+                            <div class="step">
+                                <div class="step-title">1️⃣ Подключение по SSH</div>
+                                ${authInstruction}
+                            </div>
+
+                            <div class="step">
+                                <div class="step-title">2️⃣ Загрузка проекта</div>
+                                <div class="step-content">
+                                    Ты сразу попадешь в папку <code>/workspace</code>.<br>
+                                    Клонируй репозиторий точкой в конце:
+                                    <div class="cmd-box" onclick="copyText('git clone https://github.com/user/repo.git .')">git clone https://github.com/user/repo.git .</div>
+                                    <small style="color: var(--color-text-muted); display:block; margin-top:4px;">
+                                        ⚠️ Если ошибка "directory not empty", выполни: <code>rm -rf /workspace/*</code> перед клоном.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="step" style="background: var(--color-surface-2); padding: 12px; border-radius: 8px; border: 1px solid var(--color-border);">
+                                <div class="step-title" style="color: var(--color-primary);">🔌 Проброс портов (Reverse Tunnel)</div>
+                                <div class="step-content">
+                                    Хочешь запустить React/Node/DB внутри контейнера, но открывать на своем компьютере как <code>localhost:3000</code>?
+                                    <br><br>
+                                    <strong>Важно:</strong> Для работы туннеля на твоем компьютере должен быть включен SSH-сервер.
+                                    <button onclick="showTunnelHelp()" style="margin-top:8px; font-size:11px; text-decoration:underline; color:var(--color-primary); background:none; border:none; padding:0; cursor:pointer;">Как включить? (macOS/Linux/Windows)</button>
+
+                                    <div style="margin-top: 10px;">Команда для проброса порта 3000:</div>
+                                    <div class="cmd-box" onclick="copyText('${tunnelCmd}')" style="cursor: pointer;">${tunnelCmd}</div>
+                                    <small style="color: var(--color-text-faint);">
+                                        (Нажми, чтобы скопировать. Запусти эту команду в новом окне терминала на своем компьютере).
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="step">
+                                <div class="step-title">3️⃣ Веб-доступ</div>
+                                <div class="step-content">
+                                    Всё, что лежит в <code>/workspace</code>, доступно по ссылке выше (порт 80).<br>
+                                    Для портов приложений (3000, 5432 и др.) используй туннель.
+                                </div>
+                            </div>
                         </div>
 
-                        ${authStep}
-
-                        <div class="step">
-                            <strong>4. Работа с кодом 📂</strong>
-                            <p>Ты сразу попадешь в папку <code>/workspace</code>. Клонируй проект точкой в конце:</p>
-                            <div class="cmd-box" onclick="copyText('git clone https://github.com/user/repo.git .')">git clone https://github.com/user/repo.git .</div>
-                            <p style="margin-top:0.5rem; font-size:0.85em;">Файлы сразу появятся на сайте по ссылке выше.</p>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" onclick="closeModal()">Понятно, приступаю к работе</button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" onclick="this.closest('.modal-overlay').remove()">Понятно</button>
                     </div>
                 </div>
             `;
-            document.body.appendChild(modal);
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('successModal');
+            modal.classList.remove('active');
+            setTimeout(() => modal.innerHTML = '', 300);
         }
 
         async function removeEnv(clientId) {
-            if (!confirm(`Удалить среду "${clientId}"?`)) return;
+            if (!confirm(`Удалить среду "${clientId}"?\nКонтейнер будет остановлен и удалён.`)) {
+                return;
+            }
+
             try {
-                const res = await fetch(`${API}/${encodeURIComponent(clientId)}`, { method: 'DELETE' });
+                const res = await fetch(`${API}/${encodeURIComponent(clientId)}`, {
+                    method: 'DELETE'
+                });
                 const data = await res.json();
-                if (!res.ok) throw new Error(data.error);
-                showToast(`Среда ${clientId} удалена`, 'success');
-                fetchEnvironments();
+                if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+
+                showToast(`✓ Среда ${clientId} удалена`);
+                await fetchEnvironments();
             } catch(err) {
-                showToast(`Ошибка: ${err.message}`, 'error');
+                showToast(`Ошибка удаления: ${err.message}`, 'error');
             }
         }
 
-        // Theme Toggle Logic
+        document.getElementById('clientIdInput')
+            .addEventListener('keydown', e => { if (e.key === 'Enter') deployEnv(); });
+        document.getElementById('sshKeyInput')
+            .addEventListener('keydown', e => { if (e.key === 'Enter') deployEnv(); });
+
         (function() {
             const btn = document.querySelector('[data-theme-toggle]');
             const html = document.documentElement;
             let d = html.getAttribute('data-theme') || 'dark';
-            const setIcon = (theme) => {
-                btn.innerHTML = theme === 'dark' 
-                    ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`
-                    : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
-            };
+
+            function setIcon(theme) {
+                btn.innerHTML = theme === 'dark' ?
+                    `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                         <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                     </svg>` :
+                    `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                     </svg>`;
+            }
+
             setIcon(d);
             btn.addEventListener('click', () => {
                 d = d === 'dark' ? 'light' : 'dark';
@@ -655,7 +881,6 @@
             });
         })();
 
-        // Init
         fetchEnvironments();
         setInterval(fetchEnvironments, 5000);
     </script>
