@@ -1,6 +1,30 @@
+# 🔧 Зависимости
 node_modules/
+
+# 📦 Сборка Vite/React
+dist/
+build/
+*.local
+
+# 🌍 Окружение
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+# .env (комментировать НЕ надо — в нём хранят примеры переменных)
+
+# 📝 Логи и системные файлы
 *.log
-.env
-package-lock.json
 .DS_Store
 Thumbs.db
+
+# 💻 IDE
+.vscode/
+.idea/
+
+# 🔒 Секреты (если есть)
+*.pem
+*.key
+
+# 🗂 Ваш бэкенд (если лежит рядом с фронтендом)
+/Backend/orkestaotr
